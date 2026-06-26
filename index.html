@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VaultIQ by VirsAI — Ask your Vault. Get answers, not links.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0c2340;
+    --navy-mid: #163354;
+    --navy-light: #1e4a7a;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-mid: #9FE1CB;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --text: #0c1929;
+    --text-mid: #3d5166;
+    --text-muted: #64748b;
+    --surface: #f7f9fc;
+    --surface-2: #eef2f7;
+    --border: #dde3ec;
+    --white: #ffffff;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 96px 0; }
+  .section-sm { padding: 72px 0; }
+  h1 { font-size: clamp(36px, 5vw, 58px); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; }
+  h2 { font-size: clamp(26px, 3.5vw, 38px); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+  h3 { font-size: 18px; font-weight: 600; line-height: 1.3; }
+  p { color: var(--text-mid); }
+  .label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: var(--radius-md); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-primary:hover { background: #0F6E56; transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--navy); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--navy); background: var(--surface); }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ── Nav ── */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1100px; margin: 0 auto; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 34px; height: 34px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .logo-text { font-size: 17px; font-weight: 600; color: var(--navy); }
+  .logo-text span { color: var(--teal); }
+  .logo-by { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { font-size: 14px; color: var(--text-mid); font-weight: 500; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--navy); }
+  .nav-cta { display: flex; gap: 10px; }
+
+  /* ── Hero ── */
+  #hero { padding: 64px 0 72px; background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%); }
+  .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--teal-light); border-radius: 99px; font-size: 13px; font-weight: 500; color: #085041; margin-bottom: 24px; }
+  .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+  .hero h1 { color: var(--navy); margin-bottom: 20px; }
+  .hero h1 em { font-style: normal; color: var(--teal); }
+  .hero-sub { font-size: 18px; line-height: 1.6; color: var(--text-mid); margin-bottom: 36px; max-width: 480px; }
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-trust { display: flex; gap: 24px; margin-top: 40px; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .trust-icon { width: 16px; height: 16px; color: var(--teal); flex-shrink: 0; }
+
+  /* ── Chat Demo ── */
+  .chat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 4px 24px rgba(12,35,64,0.08); overflow: hidden; display: flex; flex-direction: column; }
+  .chat-header { background: var(--navy); padding: 13px 18px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .chat-header-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); animation: pulse 2s ease-in-out infinite; }
+  .chat-header-title { font-size: 13px; color: #a8c4de; font-weight: 500; }
+  .chat-header-status { margin-left: auto; font-size: 11px; color: #5fcea4; background: rgba(29,158,117,0.15); padding: 3px 10px; border-radius: 99px; }
+  .chat-sub { background: var(--teal-light); border-bottom: 1px solid var(--teal-mid); padding: 6px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .chat-sub-path { font-size: 11px; font-weight: 600; color: #085041; font-family: 'IBM Plex Mono', monospace; }
+  .chat-sub-rbac { font-size: 10px; font-weight: 600; color: #085041; background: rgba(8,80,65,0.12); padding: 2px 9px; border-radius: 99px; border: 1px solid rgba(8,80,65,0.2); }
+  .chat-body { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; scroll-behavior: smooth; min-height: 300px; max-height: 360px; }
+  .chat-body::-webkit-scrollbar { width: 3px; }
+  .chat-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  /* Bubbles */
+  .bubble { max-width: 88%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.55; animation: popIn .26s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes popIn { from{opacity:0;transform:scale(.93) translateY(6px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .bubble-user { align-self: flex-end; background: var(--navy); color: var(--white); border-bottom-right-radius: 3px; }
+  .bubble-user.typing::after { content:'|'; animation: blink .9s infinite; margin-left:1px; }
+  .bubble-ai { align-self: flex-start; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-bottom-left-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  .bubble-ai.streaming::after { content:'▋'; color: var(--teal); animation: blink .8s infinite; font-size: 11px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  /* Processing card */
+  .proc-card { align-self: flex-start; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; display: flex; flex-direction: column; gap: 7px; min-width: 268px; animation: popIn .26s cubic-bezier(.34,1.56,.64,1) both; }
+  .proc-hdr { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .09em; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .proc-step { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-muted); transition: color .2s; }
+  .proc-step.active { color: var(--navy); }
+  .proc-step.done { color: var(--teal); }
+  .step-ico { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all .2s; }
+  .proc-step.active .step-ico { background: var(--navy); border-color: var(--navy); }
+  .proc-step.done  .step-ico { background: var(--teal); border-color: var(--teal); }
+  .ico-spin { width: 8px; height: 8px; border: 1.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .proc-step.active .ico-spin { display: block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .ico-check { display: none; width: 8px; height: 8px; }
+  .proc-step.done .ico-spin { display: none; }
+  .proc-step.done .ico-check { display: block; }
+  .step-body { flex: 1; }
+  .step-lbl { font-weight: 600; font-size: 12px; line-height: 1.3; }
+  .step-det { font-size: 10.5px; opacity: .75; margin-top: 1px; }
+  .step-meta { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 99px; background: rgba(29,158,117,0.1); color: var(--teal); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .proc-step.active .step-meta { background: rgba(12,35,64,0.08); color: var(--navy); }
+  .prog-wrap { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; display: none; margin-top: 4px; }
+  .prog-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), var(--teal-mid)); border-radius: 99px; transition: width .25s linear; }
+  /* Inline citation badge */
+  .cit-ref { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; background: var(--teal-light); color: var(--teal); font-size: 10px; font-weight: 700; border: 1.5px solid var(--teal-mid); cursor: pointer; transition: all .15s; vertical-align: middle; margin: 0 1px; }
+  .cit-ref:hover { background: var(--teal); color: var(--white); transform: scale(1.18); }
+  /* Confidence badge */
+  .conf-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 99px; background: var(--teal-light); color: #085041; font-size: 11px; font-weight: 600; border: 1px solid var(--teal-mid); animation: popIn .3s cubic-bezier(.34,1.56,.64,1) both; }
+  /* Citation panel */
+  .cit-panel { align-self: flex-start; width: 100%; margin-top: 2px; padding-top: 9px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; animation: popIn .3s cubic-bezier(.34,1.56,.64,1) both; }
+  .cit-ttl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 2px; }
+  .cit-item { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border-radius: var(--radius-sm); font-size: 11.5px; color: var(--text-mid); cursor: pointer; border: 1.5px solid transparent; transition: all .15s; }
+  .cit-item:hover { background: var(--teal-light); border-color: var(--teal-mid); color: #085041; transform: translateX(2px); }
+  .cit-num { font-size: 10px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--teal-mid); flex-shrink: 0; }
+  /* Quota bars */
+  .quota-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 13px; animation: popIn .26s cubic-bezier(.34,1.56,.64,1) both; }
+  .quota-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 10px; }
+  .quota-row { margin-bottom: 8px; }
+  .quota-lbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .quota-lbl strong { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; }
+  .quota-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .quota-fill { height: 100%; border-radius: 99px; }
+  .quota-fill.g { background: var(--teal); }
+  .quota-fill.a { background: var(--amber); }
+  .quota-fill.r { background: #dc2626; }
+  .quota-note { margin-top: 10px; padding: 8px 10px; background: var(--white); border: 1px solid var(--border); border-radius: 6px; font-size: 11.5px; color: var(--text-muted); }
+  /* Slide-in doc overlay */
+  .doc-overlay { position: fixed; top: 0; right: -440px; width: 420px; height: 100%; background: var(--white); border-left: 2px solid var(--teal-mid); box-shadow: -4px 0 32px rgba(12,35,64,0.12); z-index: 400; transition: right .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+  .doc-overlay.open { right: 0; }
+  .ov-hdr { background: var(--navy); padding: 18px 20px; display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; }
+  .ov-title { font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,.9); line-height: 1.4; flex: 1; }
+  .ov-close { background: rgba(255,255,255,.12); border: none; color: var(--white); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; flex-shrink: 0; margin-left: 10px; transition: background .15s; }
+  .ov-close:hover { background: rgba(255,255,255,.25); }
+  .ov-body { padding: 18px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .doc-meta { background: var(--surface); border: 1px solid var(--border); padding: 11px 13px; border-radius: var(--radius-sm); font-size: 12px; display: grid; grid-template-columns: 68px 1fr; gap: 5px; }
+  .dm-lbl { color: var(--text-muted); font-weight: 600; }
+  .dm-val { color: var(--navy); font-weight: 600; }
+  .doc-text { font-size: 13.5px; color: var(--text-mid); line-height: 1.72; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; background: var(--white); }
+  .hl { background: #fef3c7; color: var(--navy); padding: 2px 4px; border-radius: 3px; font-weight: 600; border-bottom: 2px solid #f59e0b; }
+
+  /* ── Trust bar ── */
+  #trust { padding: 26px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+  .trust-bar { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .trust-pill { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 500; color: var(--text-mid); white-space: nowrap; }
+  .trust-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+  /* ── Problem ── */
+  #problem { background: var(--white); }
+  .problem-header { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .problem-header p { font-size: 18px; margin-top: 16px; }
+  .problem-card { border-left: 3px solid var(--teal); padding: 28px; background: var(--surface); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+  .problem-num { font-size: 13px; font-weight: 600; color: var(--teal); margin-bottom: 12px; font-family: 'IBM Plex Mono', monospace; }
+  .problem-card h3 { color: var(--navy); margin-bottom: 8px; }
+  .problem-card p { font-size: 15px; }
+
+  /* ── How it works ── */
+  #how { background: var(--navy); }
+  #how .label { color: var(--teal-mid); }
+  #how h2 { color: var(--white); margin-bottom: 12px; }
+  #how .section-sub { color: #a8c4de; font-size: 18px; margin-bottom: 56px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .step { padding: 32px 28px; position: relative; }
+  .step:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 60%; background: rgba(255,255,255,0.1); }
+  .step-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--teal); margin-bottom: 16px; letter-spacing: 0.08em; }
+  .step-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .step-icon svg { width: 20px; height: 20px; color: var(--teal-mid); }
+  .step h3 { color: var(--white); font-size: 16px; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: #7da8c8; line-height: 1.6; }
+  .how-caption { text-align: center; margin-top: 48px; padding: 16px 24px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.2); border-radius: var(--radius-md); font-size: 14px; color: var(--teal-mid); }
+  .how-caption strong { color: #5fcea4; }
+
+  /* ── Multi-cloud ── */
+  #cloud { background: var(--surface); }
+  .cloud-header { text-align: center; max-width: 600px; margin: 0 auto 56px; }
+  .cloud-header p { font-size: 18px; margin-top: 16px; }
+  .cloud-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+  .cloud-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .cloud-badge { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; }
+  .badge-aws { background: #fff3e0; color: #e65100; }
+  .badge-azure { background: #e3f2fd; color: #0d47a1; }
+  .badge-gcp { background: #e8f5e9; color: #1b5e20; }
+  .cloud-rows { display: flex; flex-direction: column; gap: 10px; }
+  .cloud-row { display: flex; gap: 10px; }
+  .cloud-row-label { font-size: 12px; color: var(--text-muted); font-weight: 500; min-width: 100px; flex-shrink: 0; padding-top: 2px; }
+  .cloud-row-val { font-size: 13px; color: var(--text); font-weight: 500; }
+  .cloud-note { margin-top: 20px; padding: 12px 14px; background: var(--surface); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px; }
+  .cloud-note svg { width: 14px; height: 14px; color: var(--teal); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Security / Architecture ── */
+  #security { background: var(--white); }
+  .security-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+  .security-statement { font-size: clamp(20px, 2.5vw, 26px); font-weight: 600; color: var(--navy); line-height: 1.35; margin-bottom: 32px; }
+  .security-statement em { font-style: normal; color: var(--teal); }
+  .security-list { display: flex; flex-direction: column; gap: 16px; }
+  .security-item { display: flex; gap: 14px; align-items: flex-start; }
+  .security-check { width: 22px; height: 22px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .security-check svg { width: 12px; height: 12px; color: #085041; }
+  .security-item h4 { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+  .security-item p { font-size: 14px; line-height: 1.6; }
+
+  /* Architecture flow diagram */
+  .arch-diagram { background: var(--navy); border-radius: var(--radius-lg); padding: 24px; }
+  .arch-diagram-title { font-size: 11px; font-weight: 700; color: #5b8aaa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+  .arch-replay { font-size: 10px; font-weight: 600; color: #5b8aaa; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 99px; padding: 3px 10px; cursor: pointer; transition: all .15s; }
+  .arch-replay:hover { color: var(--teal); border-color: var(--teal); }
+  /* System zone containers */
+  .arch-zone { border: 1.5px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 14px 14px 14px; position: relative; margin-bottom: 0; transition: border-color .25s, box-shadow .25s; }
+  .arch-zone-vault { border-color: rgba(59,130,246,0.25); background: rgba(30,74,122,0.25); }
+  .arch-zone-cloud { border-color: rgba(186,117,23,0.25); background: rgba(186,117,23,0.05); }
+  .arch-zone-label { position: absolute; top: -10px; left: 14px; background: var(--navy); padding: 0 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; display: flex; align-items: center; gap: 5px; }
+  .arch-zone-vault .arch-zone-label { color: #93c5fd; }
+  .arch-zone-cloud .arch-zone-label { color: #fac775; }
+  .arch-zone-vault:has(.a-active) { border-color: rgba(59,130,246,0.55); box-shadow: 0 0 0 1px rgba(59,130,246,0.15) inset; }
+  .arch-zone-cloud.a-active { border-color: rgba(186,117,23,0.7); box-shadow: 0 0 0 1px rgba(186,117,23,0.15) inset, 0 0 20px rgba(186,117,23,0.12); }
+  /* Nodes */
+  .arch-node { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: var(--radius-sm); border: 1px solid; position: relative; transition: box-shadow .25s, border-color .25s, opacity .3s; }
+  .arch-node-vault  { background: #e6eef7; border-color: #b8cfe6; }
+  .arch-node-plugin { background: var(--teal-light); border-color: var(--teal-mid); }
+  .arch-node-tvm    { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); border-style: dashed; }
+  .arch-node.a-active.arch-node-vault   { box-shadow: 0 0 0 2px #93c5fd, 0 0 14px rgba(59,130,246,0.3); border-color: #93c5fd; }
+  .arch-node.a-active.arch-node-plugin  { box-shadow: 0 0 0 2px var(--teal), 0 0 14px rgba(29,158,117,0.35); border-color: var(--teal); }
+  .arch-node.a-done { opacity: 0.5; }
+  /* Plugin + VaultDocs horizontal row */
+  .arch-plugin-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .arch-plugin-row .arch-node { flex: 1; min-width: 0; }
+  .arch-h-connector { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .arch-h-line { width: 28px; height: 1.5px; background: rgba(255,255,255,0.15); position: relative; overflow: hidden; }
+  .arch-h-line::after { content:''; position:absolute; top:0; bottom:0; left:-100%; width:100%; background: var(--teal); transition: left .4s linear; }
+  .arch-connector.a-active ~ .arch-plugin-row .arch-h-line::after,
+  .arch-node.a-active ~ * .arch-h-line::after { left: 0; }
+  .arch-h-arrow { color: rgba(255,255,255,0.3); font-size: 11px; }
+  .arch-docs-node { flex: 0 0 auto; }
+  /* Cloud services row */
+  .arch-services { display: flex; align-items: stretch; gap: 6px; flex-wrap: wrap; }
+  .arch-service { flex: 1; min-width: 100px; background: rgba(186,117,23,0.1); border: 1px solid rgba(186,117,23,0.25); border-radius: 7px; padding: 9px 11px; }
+  .arch-service-name { font-size: 12px; font-weight: 600; color: #fac775; }
+  .arch-service-sub  { font-size: 10.5px; color: rgba(186,117,23,0.7); margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
+  .arch-svc-arrow { color: rgba(186,117,23,0.4); font-size: 16px; display: flex; align-items: center; flex-shrink: 0; }
+  .arch-zone-note { margin-top: 10px; font-size: 10.5px; color: rgba(186,117,23,0.6); font-style: italic; }
+  /* Vertical connectors between zones */
+  .arch-connector { display: grid; grid-template-columns: 28px 1fr; gap: 0; padding: 0 13px; position: relative; min-height: 34px; }
+  .arch-connector-line { width: 2px; background: rgba(255,255,255,0.1); margin: 0 auto; position: relative; overflow: hidden; border-radius: 99px; }
+  .arch-connector-line::after { content:''; position: absolute; left: 0; right: 0; top: -100%; height: 100%; border-radius: 99px; background: var(--teal); transition: top .55s linear; }
+  .arch-connector.a-active .arch-connector-line { background: rgba(255,255,255,0.2); }
+  .arch-connector.a-active .arch-connector-line::after { top: 100%; }
+  .arch-connector-label { display: flex; align-items: center; padding: 4px 0 4px 12px; }
+  .arch-connector-label span { font-size: 10.5px; display: flex; align-items: center; gap: 6px; transition: color .25s; }
+  .arch-connector.a-active .arch-connector-label span { color: var(--teal); }
+  .arch-connector:not(.a-active) .arch-connector-label span { color: #3d5a72; }
+  /* Step number badge on connectors */
+  .arch-step-badge { width: 18px; height: 18px; border-radius: 50%; background: rgba(29,158,117,0.15); border: 1.5px solid rgba(29,158,117,0.3); color: rgba(29,158,117,0.7); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 4px; }
+  .arch-connector.a-active .arch-step-badge { background: rgba(29,158,117,0.3); border-color: var(--teal); color: var(--teal); }
+  /* Shared node internals */
+  .arch-icon { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .arch-node-vault  .arch-icon { background: var(--navy); }
+  .arch-node-plugin .arch-icon { background: var(--teal); }
+  .arch-node-tvm    .arch-icon { background: rgba(255,255,255,0.1); }
+  .arch-icon svg { width: 14px; height: 14px; color: var(--white); }
+  .arch-node-label { flex: 1; min-width: 0; }
+  .arch-node-label strong { font-size: 12.5px; font-weight: 600; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .arch-node-vault  .arch-node-label strong, .arch-node-plugin .arch-node-label strong { color: var(--navy); }
+  .arch-node-tvm    .arch-node-label strong { color: #c8dce8; }
+  .arch-node-label span { font-size: 10.5px; display: block; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .arch-node-vault  .arch-node-label span, .arch-node-plugin .arch-node-label span { color: var(--text-muted); }
+  .arch-node-tvm    .arch-node-label span { color: #7da8c8; }
+  .arch-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+  .arch-badge-green { background: rgba(29,158,117,0.2); color: #5fcea4; }
+  .arch-badge-blue  { background: rgba(59,130,246,0.2); color: #93c5fd; }
+  .arch-badge-amber { background: rgba(186,117,23,0.2); color: #fac775; }
+  .arch-badge-gray  { background: rgba(255,255,255,0.08); color: #7da8c8; }
+  /* Status bar */
+  .arch-status { margin-top: 14px; padding: 8px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-sm); min-height: 32px; display: flex; align-items: center; gap: 8px; }
+  .arch-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; animation: pulse 1.5s infinite; }
+  .arch-status-text { font-size: 11.5px; color: #7da8c8; transition: opacity .2s; font-family: 'IBM Plex Mono', monospace; }
+  /* Flow legend */
+  .arch-flow-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .arch-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #7da8c8; }
+  .arch-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── Features ── */
+  #features { background: var(--surface); }
+  .features-header { text-align: center; max-width: 560px; margin: 0 auto 56px; }
+  .features-header p { font-size: 18px; margin-top: 16px; }
+  .feature-tile { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: border-color 0.2s; }
+  .feature-tile:hover { border-color: var(--teal-mid); }
+  .feature-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .feature-icon svg { width: 20px; height: 20px; color: #0F6E56; }
+  .feature-tile h3 { font-size: 15px; color: var(--navy); margin-bottom: 7px; }
+  .feature-tile p { font-size: 14px; line-height: 1.6; }
+  .feature-tile.highlight { border-color: var(--teal-mid); background: var(--teal-light); }
+  .feature-tile.highlight .feature-icon { background: var(--white); }
+  .feature-tile.highlight h3 { color: #085041; }
+  .feature-tile.highlight p { color: #0F6E56; }
+  .feature-new-badge { display: inline-block; font-size: 10px; font-weight: 600; background: var(--navy); color: var(--white); padding: 2px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.05em; }
+  .feature-tile.highlight .feature-new-badge { background: #085041; color: #e1f5ee; }
+
+  /* ── Onboarding ── */
+  #onboarding { background: var(--white); }
+  .onboarding-inner { display: grid; grid-template-columns: 1fr; gap: 0; align-items: start; max-width: 640px; }
+  .onboarding-left h2 { color: var(--navy); margin-bottom: 16px; }
+  .onboarding-left p { font-size: 16px; margin-bottom: 28px; }
+  .onboarding-nope { display: flex; flex-direction: column; gap: 10px; }
+  .nope-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-mid); }
+  .nope-x { width: 18px; height: 18px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nope-x svg { width: 10px; height: 10px; color: #dc2626; }
+  .timeline { display: flex; flex-direction: column; }
+  .timeline-phase { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 0 4px; border-top: 1px solid var(--border); margin-top: 12px; }
+  .timeline-phase:first-child { border-top: none; margin-top: 0; }
+  .timeline-item { display: grid; grid-template-columns: 130px 1fr; gap: 16px; padding-bottom: 16px; position: relative; }
+  .timeline-time { position: relative; }
+  .timeline-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--teal-light); border: 2px solid var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .timeline-dot-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  .timeline-dur { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
+  .timeline-content h4 { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .timeline-content p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+  .timeline-total { margin-top: 12px; padding: 16px 18px; background: var(--teal-light); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; }
+  .timeline-total span { font-size: 14px; font-weight: 600; color: #085041; }
+  .timeline-total strong { font-size: 22px; font-weight: 600; color: var(--teal); font-family: 'IBM Plex Mono', monospace; }
+  .timeline-header { display: grid; grid-template-columns: 130px 1fr; gap: 16px; margin-bottom: 12px; }
+  .timeline-header span { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── Pricing ── */
+  #pricing { background: var(--surface); }
+  .pricing-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+  .pricing-inner h2 { color: var(--navy); margin-bottom: 14px; }
+  .pricing-inner > p { font-size: 18px; margin-bottom: 48px; }
+  .pricing-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; text-align: left; }
+  .pricing-list { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+  .pricing-item { display: flex; align-items: flex-start; gap: 12px; }
+  .pricing-check { width: 20px; height: 20px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .pricing-check svg { width: 11px; height: 11px; color: #085041; }
+  .pricing-item p { font-size: 15px; color: var(--text-mid); }
+  .pricing-item strong { color: var(--text); }
+  .pricing-note { margin-top: 24px; padding: 14px; background: var(--surface); border-radius: var(--radius-md); font-size: 13px; color: var(--text-muted); }
+
+  /* ── FAQ ── */
+  #faq { background: var(--white); }
+  .faq-inner { max-width: 760px; margin: 0 auto; }
+  .faq-header { text-align: center; margin-bottom: 48px; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q { width: 100%; text-align: left; padding: 20px 0; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Inter', sans-serif; }
+  .faq-q span { font-size: 16px; font-weight: 500; color: var(--navy); line-height: 1.4; }
+  .faq-chevron { width: 20px; height: 20px; flex-shrink: 0; transition: transform 0.2s; color: var(--text-muted); }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0 0 20px; font-size: 15px; color: var(--text-mid); line-height: 1.7; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a code { font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: var(--surface); padding: 2px 6px; border-radius: 4px; color: var(--teal); border: 1px solid var(--border); }
+
+  /* ── CTA ── */
+  #cta { background: var(--navy); padding: 96px 0; text-align: center; }
+  #cta h2 { color: var(--white); margin-bottom: 16px; }
+  #cta p { font-size: 18px; color: #a8c4de; max-width: 520px; margin: 0 auto 36px; }
+  .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-white { background: var(--white); color: var(--navy); }
+  .btn-white:hover { background: var(--surface); }
+  .btn-outline-white { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.3); }
+  .btn-outline-white:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+
+  /* ── Footer ── */
+  footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; }
+
+  .nav-menu-btn { display: none; background: none; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px; cursor: pointer; color: var(--navy); gap: 5px; flex-direction: column; justify-content: center; }
+  .nav-menu-btn span { display: block; width: 18px; height: 2px; background: currentColor; border-radius: 2px; transition: all .2s; }
+  .mobile-nav { display: none; background: var(--white); border-top: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 4px; }
+  .mobile-nav a { padding: 10px 0; font-size: 15px; font-weight: 500; color: var(--text-mid); border-bottom: 1px solid var(--surface-2); }
+  .mobile-nav.open { display: flex; }
+  @media (max-width: 900px) {
+    .hero-inner, .security-inner, .onboarding-inner { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps .step:nth-child(2)::after { display: none; }
+    .nav-links, .nav-cta { display: none; }
+    .nav-menu-btn { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .steps { grid-template-columns: 1fr; }
+    .step::after { display: none !important; }
+    .hero-ctas { flex-direction: column; }
+    [style*="grid-template-columns:repeat(2,1fr)"] { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18" fill="none" width="18" height="18">
+          <rect x="2" y="2" width="6" height="6" rx="1.5" fill="#1D9E75"/>
+          <rect x="10" y="2" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="2" y="10" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="10" y="10" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.7)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">Vault<span>IQ</span></div>
+        <div class="logo-by">by VirsAI Solutions</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#cloud">Multi-cloud</a>
+      <a href="#security">Security</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#faq" class="btn btn-secondary" style="padding:10px 18px;font-size:14px;">Documentation</a>
+      <a href="#" onclick="openRequestModal();return false;" class="btn btn-primary" style="padding:10px 18px;font-size:14px;">Request access</a>
+    </div>
+    <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#how">How it works</a>
+    <a href="#cloud">Multi-cloud</a>
+    <a href="#security">Security</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#" onclick="openRequestModal();return false;" style="color:var(--teal);border-bottom:none;font-weight:600;">Request access →</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero">
+        <div class="hero-tag"><div class="hero-tag-dot"></div>Vault SDK Plugin · Your data never leaves your infrastructure</div>
+        <h1>Ask your Vault.<br><em>Get answers,</em><br>not links.</h1>
+        <p class="hero-sub">VaultIQ installs directly inside your Veeva Vault and answers questions in plain English — with citations — using only your own documents. Your documents never leave your infrastructure.</p>
+        <div class="hero-ctas">
+          <a href="#" onclick="openRequestModal();return false;" class="btn btn-primary">Request access →</a>
+          <a href="#how" class="btn btn-secondary">See how it works</a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 4v4c0 3.3 2.6 6.4 6 7 3.4-.6 6-3.7 6-7V4L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Runs inside Vault SDK
+          </div>
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            RBAC enforced
+          </div>
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5V3.5a3 3 0 016 0V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            AWS · Azure · GCP
+          </div>
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 16 16" fill="none"><path d="M2 8h4l2-5 2 10 2-5h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Cited answers only
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Animated demo ── -->
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="chat-header-dot"></div>
+          <div class="chat-header-title">VaultIQ — Document Search</div>
+          <div class="chat-header-status">● Live</div>
+        </div>
+        <div class="chat-sub">
+          <span class="chat-sub-path">vault.company.com / vaultiq</span>
+          <span class="chat-sub-rbac">RBAC enforced</span>
+        </div>
+        <div class="chat-body" id="chat-body"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust bar ── -->
+<section id="trust">
+  <div class="container">
+    <div class="trust-bar">
+      <div class="trust-pill"><div class="trust-pill-dot"></div>Vault SDK Plugin — no separate server</div>
+      <div class="trust-pill"><div class="trust-pill-dot"></div>Documents never leave Vault</div>
+      <div class="trust-pill"><div class="trust-pill-dot"></div>AWS · Azure · GCP</div>
+      <div class="trust-pill"><div class="trust-pill-dot"></div>Every answer cites a source</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Problem ── -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-header">
+      <div class="label">The problem</div>
+      <h2 style="margin-top:12px;color:var(--navy);">Your documents have the answers. Finding them doesn't.</h2>
+      <p>Veeva Vault holds your SOPs, protocols, regulatory submissions, and quality records. Getting answers out of them is still manual, slow, and unreliable.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <h3>Search returns files, not answers</h3>
+        <p>Standard Vault search gives you a list of documents. Someone still has to open each one, read it, and find the relevant paragraph — on every query, every day.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <h3>Keywords miss meaning</h3>
+        <p>A search for "storage temperature" misses a document that says "maintain between 2°C and 8°C." VQL FIND matches words, not intent.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <h3>AI tools require your documents to leave</h3>
+        <p>Every commercial AI document tool asks you to upload your documents to their cloud. In pharma and life sciences, that's a non-starter for IT and compliance.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">04</div>
+        <h3>Compliance can't afford hallucination</h3>
+        <p>An AI that makes up answers is worse than no AI at all. If you can't trust every sentence, you still have to read the document — the tool adds friction, not value.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ── -->
+<section id="how" class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;">
+      <div class="label">How it works</div>
+      <h2 style="color:var(--white);margin-top:12px;">From question to cited answer in seconds</h2>
+      <p class="section-sub">Four steps. All running inside your Vault and your cloud account.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h3>Question asked</h3>
+        <p>A user types a question in plain English inside Vault. No query syntax, no special commands.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 10h14M10 3l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Hybrid search</h3>
+        <p>VaultIQ searches simultaneously by keyword (Vault VQL) and by meaning (AI vector search). Documents that match by intent appear even without exact keywords.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-icon"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>RBAC check</h3>
+        <p>Results are filtered through Vault's own access controls. If a user cannot see a document in Vault, that document does not appear in the answer.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 04</div>
+        <div class="step-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M4 5h12M4 10h8M4 15h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h3>Cited answer</h3>
+        <p>A plain-English answer is returned with numbered citations. Every sentence traces back to a specific document. Any sentence that can't be cited is removed before you see it.</p>
+      </div>
+    </div>
+    <div class="how-caption"><strong>Everything runs inside your Vault and your cloud account.</strong> Your documents never move to VaultIQ's servers — or anyone else's.</div>
+  </div>
+</section>
+
+<!-- ── Multi-cloud ── -->
+<section id="cloud" class="section">
+  <div class="container">
+    <div class="cloud-header">
+      <div class="label">Multi-cloud support</div>
+      <h2 style="color:var(--navy);margin-top:12px;">Your cloud. Your choice.</h2>
+      <p>VaultIQ runs entirely inside your cloud account. Switch providers by changing a single Vault Setting — no JAR rebuild, no redeployment.</p>
+    </div>
+    <div class="grid-3">
+      <div class="cloud-card">
+        <div class="cloud-card-head">
+          <div class="cloud-badge badge-aws">AWS</div>
+          <div><h3>Amazon Web Services</h3><div style="font-size:13px;color:var(--text-muted)">Default provider</div></div>
+        </div>
+        <div class="cloud-rows">
+          <div class="cloud-row"><div class="cloud-row-label">Embeddings</div><div class="cloud-row-val">Amazon Titan Embed v2 (1536-dim)</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Language model</div><div class="cloud-row-val">Claude Haiku 3.5 / Sonnet 3.5</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Vector store</div><div class="cloud-row-val">OpenSearch Serverless</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Auth</div><div class="cloud-row-val">STS short-lived credentials</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Networking</div><div class="cloud-row-val">VPC PrivateLink (optional)</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Data stays in</div><div class="cloud-row-val">Your AWS account</div></div>
+        </div>
+        <div class="cloud-note"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>VPC PrivateLink routes Bedrock and OpenSearch traffic off the public internet.</div>
+      </div>
+      <div class="cloud-card">
+        <div class="cloud-card-head">
+          <div class="cloud-badge badge-azure">Azure</div>
+          <div><h3>Microsoft Azure</h3><div style="font-size:13px;color:var(--text-muted)">Any Azure region</div></div>
+        </div>
+        <div class="cloud-rows">
+          <div class="cloud-row"><div class="cloud-row-label">Embeddings</div><div class="cloud-row-val">Azure OpenAI (any deployment)</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Language model</div><div class="cloud-row-val">GPT-4o mini / GPT-4o</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Vector store</div><div class="cloud-row-val">Azure AI Search</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Auth</div><div class="cloud-row-val">API key</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Networking</div><div class="cloud-row-val">Azure Private Endpoints</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Data stays in</div><div class="cloud-row-val">Your Azure subscription</div></div>
+        </div>
+        <div class="cloud-note"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Set <code style="font-family:monospace;font-size:11px;background:#f0f4f8;padding:1px 5px;border-radius:3px;">cloud_provider__c = azure</code> in Vault Settings. No rebuild.</div>
+      </div>
+      <div class="cloud-card">
+        <div class="cloud-card-head">
+          <div class="cloud-badge badge-gcp">GCP</div>
+          <div><h3>Google Cloud</h3><div style="font-size:13px;color:var(--text-muted)">Any Vertex AI region</div></div>
+        </div>
+        <div class="cloud-rows">
+          <div class="cloud-row"><div class="cloud-row-label">Embeddings</div><div class="cloud-row-val">Vertex AI text-embedding-004</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Language model</div><div class="cloud-row-val">Gemini 1.5 Flash / Pro</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Vector store</div><div class="cloud-row-val">Vertex AI Vector Search</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Auth</div><div class="cloud-row-val">Service account JWT, auto-refreshed</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Networking</div><div class="cloud-row-val">VPC Service Controls</div></div>
+          <div class="cloud-row"><div class="cloud-row-label">Data stays in</div><div class="cloud-row-val">Your GCP project</div></div>
+        </div>
+        <div class="cloud-note"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Service account credentials auto-refresh — no manual token rotation needed.</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;font-size:14px;color:var(--text-muted);">All compute costs are billed directly to your cloud account. VaultIQ does not sit between you and your cloud provider.</div>
+  </div>
+</section>
+
+<!-- ── Security + Architecture ── -->
+<section id="security" class="section">
+  <div class="container">
+    <div class="security-inner">
+      <div>
+        <div class="label">Data residency &amp; security</div>
+        <p class="security-statement" style="margin-top:16px;">Your documents stay in your Vault. Your embeddings stay in your cloud account. <em>VaultIQ never touches either.</em></p>
+        <div class="security-list">
+          <div class="security-item">
+            <div class="security-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <h4>Document text never stored outside Vault</h4>
+              <p>Only embedding vectors and routing metadata are stored in the vector index. Document text is never written anywhere outside Vault.</p>
+            </div>
+          </div>
+          <div class="security-item">
+            <div class="security-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <h4>RBAC respected, not bypassed</h4>
+              <p>All Vault API calls run under the calling user's session token. Vault's own permission system governs what each user can see — the vector index is never a shortcut around permissions.</p>
+            </div>
+          </div>
+          <div class="security-item">
+            <div class="security-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <h4>No model training on your documents</h4>
+              <p>AI models are called at inference time with document snippets as context. No document content is retained by VaultIQ after the query is answered.</p>
+            </div>
+          </div>
+          <div class="security-item">
+            <div class="security-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <h4>Outbound-only network model</h4>
+              <p>Vault makes outbound HTTPS calls to your cloud AI endpoints. No inbound connections required. No firewall rules to open inward.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Architecture diagram ── -->
+      <div class="arch-diagram">
+        <div class="arch-diagram-title">
+          Request Flow — End to End
+          <button class="arch-replay" id="arch-replay">↺ Replay</button>
+        </div>
+
+        <!-- ZONE 1: Vault Environment -->
+        <div class="arch-zone arch-zone-vault">
+          <div class="arch-zone-label">
+            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M6 1L1 3.5V7c0 2.5 2.2 4.5 5 5 2.8-.5 5-2.5 5-5V3.5L6 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Vault Environment
+          </div>
+
+          <!-- User node -->
+          <div class="arch-node arch-node-vault" id="an-0">
+            <div class="arch-icon" style="background:#1e4a7a;">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="white" stroke-width="1.4"/><path d="M3 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </div>
+            <div class="arch-node-label">
+              <strong>User in Vault</strong>
+              <span>Natural-language question · session token attached</span>
+            </div>
+            <div class="arch-badge arch-badge-blue">session token</div>
+          </div>
+
+          <!-- Connector ①: User → Plugin -->
+          <div class="arch-connector" id="ac-0">
+            <div class="arch-connector-line"></div>
+            <div class="arch-connector-label"><span>↓ HTTPS · session token · Vault SDK invokes action <span class="arch-step-badge">1</span></span></div>
+          </div>
+
+          <!-- Plugin + Vault Docs row -->
+          <div class="arch-plugin-row">
+            <div class="arch-node arch-node-plugin" id="an-1">
+              <div class="arch-icon">
+                <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L2 5v4c0 3 2.4 5.8 6 6.4 3.6-.6 6-3.4 6-6.4V5L8 2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="arch-node-label">
+                <strong>VaultIQ Plugin (JAR)</strong>
+                <span>Classify · VQL · RBAC · quota</span>
+              </div>
+              <div class="arch-badge arch-badge-green">inside Vault</div>
+            </div>
+            <div class="arch-h-connector">
+              <div class="arch-h-arrow">⇄</div>
+              <div class="arch-h-line"></div>
+              <span style="font-size:9px;color:#5b8aaa;white-space:nowrap;">② VQL+RBAC</span>
+              <div class="arch-h-line"></div>
+              <div class="arch-h-arrow">⇄</div>
+            </div>
+            <div class="arch-node arch-node-vault arch-docs-node" style="flex:0 0 auto;">
+              <div class="arch-icon" style="background:#1e4a7a;">
+                <svg viewBox="0 0 16 16" fill="none"><path d="M4 2h5l3 3v9H4V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3" stroke="white" stroke-width="1.3"/><path d="M6 8h4M6 11h3" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </div>
+              <div class="arch-node-label">
+                <strong>Vault Docs</strong>
+                <span>RBAC-filtered</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector ③: Vault → Cloud -->
+        <div class="arch-connector" id="ac-1">
+          <div class="arch-connector-line"></div>
+          <div class="arch-connector-label"><span>↓ Outbound HTTPS · embed query + vector kNN (no doc text leaves Vault) <span class="arch-step-badge">3</span></span></div>
+        </div>
+
+        <!-- ZONE 2: Cloud Account -->
+        <div class="arch-zone arch-zone-cloud" id="an-2">
+          <div class="arch-zone-label">
+            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M9 8H4a2.5 2.5 0 110-5h.07A3.3 3.3 0 0110 5.9 2 2 0 019 8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Your Cloud Account — AWS · Azure · GCP
+          </div>
+          <div class="arch-services">
+            <div class="arch-service">
+              <div class="arch-service-name">⚡ Embed</div>
+              <div class="arch-service-sub">Titan v2 / AzureOAI<br>/ Vertex text-004</div>
+            </div>
+            <div class="arch-svc-arrow">→</div>
+            <div class="arch-service">
+              <div class="arch-service-name">🗃 Vector kNN</div>
+              <div class="arch-service-sub">OpenSearch /<br>AI Search / Vertex</div>
+            </div>
+            <div class="arch-svc-arrow">→</div>
+            <div class="arch-service">
+              <div class="arch-service-name">🤖 LLM Synthesis</div>
+              <div class="arch-service-sub">Claude / GPT-4o<br>/ Gemini</div>
+            </div>
+          </div>
+          <div class="arch-zone-note">All compute billed to your account · data stays in your region</div>
+        </div>
+
+        <!-- Connector ④: Cloud → Answer -->
+        <div class="arch-connector" id="ac-2">
+          <div class="arch-connector-line"></div>
+          <div class="arch-connector-label"><span>↑ Cited answer returned · no document text persisted outside Vault <span class="arch-step-badge">4</span></span></div>
+        </div>
+
+        <!-- Answer node -->
+        <div class="arch-node arch-node-vault" id="an-3">
+          <div class="arch-icon" style="background:#1e4a7a;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M4 5h8M4 8h6M4 11h5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="arch-node-label">
+            <strong>User receives cited answer</strong>
+            <span>Plain-English answer with [1][2] clickable citations to source documents</span>
+          </div>
+          <div class="arch-badge arch-badge-green">cited only</div>
+        </div>
+
+        <!-- Credential service separator -->
+        <div style="margin:14px 0 10px;display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3d5a72;">Credential service — out of request path</div>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+        </div>
+
+        <!-- TVM node -->
+        <div class="arch-node arch-node-tvm" id="an-tvm">
+          <div class="arch-icon">
+            <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.4"/><path d="M5 5V3.5a3 3 0 016 0V5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="arch-node-label">
+            <strong>VirsAI Token Service</strong>
+            <span>⑤ Verifies subscription · issues short-lived cloud credentials only · never receives documents or queries</span>
+          </div>
+          <div class="arch-badge arch-badge-gray">credential only</div>
+        </div>
+
+        <div class="arch-status">
+          <div class="arch-status-dot" id="arch-status-dot"></div>
+          <div class="arch-status-text" id="arch-status-text">Waiting for query…</div>
+        </div>
+
+        <div class="arch-flow-legend">
+          <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#93c5fd"></div>Vault environment — your infrastructure</div>
+          <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#fac775"></div>Your cloud account — your bill</div>
+          <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#7da8c8"></div>VirsAI: credentials only, no data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ── -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="features-header">
+      <div class="label">Features</div>
+      <h2 style="color:var(--navy);margin-top:12px;">Built for regulated document environments</h2>
+      <p>Every feature exists because a pharma or life sciences team needs it — not because it's on a generic AI checklist.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+
+      <!-- highlighted new feature -->
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Token quotas per user &amp; role</h3>
+        <p>Set monthly token limits per user or Vault role in Vault Settings — no code changes. Users see a clear message when their limit is reached; admins can monitor usage at any time.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M3 10h14M10 3l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Hybrid search</h3>
+        <p>Combines Vault VQL keyword search with semantic vector search simultaneously. Documents that match by meaning appear even without exact keywords.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 5h12M4 10h8M4 15h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Grounding enforcement</h3>
+        <p>Every sentence must cite a document snippet. Sentences without citations are stripped automatically — the model cannot say something it cannot prove.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>RBAC compliance</h3>
+        <p>All queries run under the calling user's Vault session token. Vault's own permission system governs what each user can see — VaultIQ never elevates privilege.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h14" stroke="currentColor" stroke-width="1.5"/><path d="M7 12h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Expiry search</h3>
+        <p>"Show me documents expiring in the next 30 days" returns a formatted table from Vault metadata — document name, version, expiry date — with no LLM call needed.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Lifecycle-triggered indexing</h3>
+        <p>Documents index automatically when they reach a configured lifecycle state. No manual step. New versions replace old index entries automatically.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 3L3 7v6l7 4 7-4V7l-7-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Intent classification</h3>
+        <p>Automatically routes queries to the right search strategy — document content, metadata attributes, or expiry — without the user learning any query syntax.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M3 3h14v14H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 3v14M3 7h4M3 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Zero-server deployment</h3>
+        <p>The JAR is the entire deployment artifact. No containers, no servers, no infrastructure to manage. Upload to Vault, configure settings, done.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 1112 0A6 6 0 014 10z" stroke="currentColor" stroke-width="1.5"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Smart model routing</h3>
+        <p>Simple queries use a faster, cheaper model. Complex multi-document synthesis uses a more capable model. Cost is optimized per query — automatically.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M17 10c0 3.87-3.13 7-7 7s-7-3.13-7-7 3.13-7 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M17 3l-7 7M17 3h-4M17 3v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Embedding cache</h3>
+        <p>Repeated queries skip the embedding call entirely — saving ~100–180ms per cache hit. Cache size and TTL are tunable via Vault Settings.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5-5-2.6L5 17.2l.9-5.5L2 7.8 7.5 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Prompt injection defense</h3>
+        <p>User queries are sanitized to prevent attempts to override system instructions through crafted input — role prefixes, HTML tags, and injection patterns are stripped.</p>
+      </div>
+
+      <div class="feature-tile">
+        <div class="feature-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" stroke-width="1.5"/><path d="M10 8v4M10 14h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Honest abstention</h3>
+        <p>When documents don't contain the answer, VaultIQ says: "I cannot answer this from the available documents." It does not fill gaps with training data.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Onboarding ── -->
+<section id="onboarding" class="section">
+  <div class="container">
+    <div class="onboarding-inner">
+      <div>
+        <div class="label">Setup</div>
+        <h2 style="color:var(--navy);margin-top:12px;">Live in under a week.</h2>
+        <p style="margin-top:12px;font-size:16px;color:var(--text-mid);">We scope setup at under a week to give your cloud and Vault teams realistic time to provision infrastructure, complete internal change management, and run thorough smoke tests — without rushing.</p>
+        <div style="margin-top:20px;padding:16px;background:var(--amber-light);border-radius:var(--radius-md);border:1px solid #fac775;">
+          <div style="font-size:13px;font-weight:600;color:#633806;margin-bottom:6px;">Why not same-day?</div>
+          <div style="font-size:13px;color:#854F0B;line-height:1.6;">Cloud resource provisioning, internal security review, and Vault change management typically take 2–3 business days. We'd rather you go live confidently than quickly.</div>
+        </div>
+        <div class="onboarding-nope" style="margin-top:24px;">
+          <div class="nope-item">
+            <div class="nope-x"><svg viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            No containers or servers to manage
+          </div>
+          <div class="nope-item">
+            <div class="nope-x"><svg viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            No vendor access to your Vault or cloud
+          </div>
+          <div class="nope-item">
+            <div class="nope-x"><svg viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            No code to write — all configuration via Vault Settings UI
+          </div>
+          <div class="nope-item">
+            <div class="nope-x"><svg viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            No ongoing infrastructure to maintain after go-live
+          </div>
+        </div>
+        <div style="margin-top:28px;padding:20px;background:var(--teal-light);border-radius:var(--radius-md);">
+          <div style="font-size:13px;font-weight:600;color:#085041;margin-bottom:6px;">Supported Vault editions</div>
+          <div style="font-size:14px;color:#0F6E56;">Vault Professional · Vault Enterprise</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">Requires Vault SDK · version 24.1.0 or later</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ── -->
+<section id="pricing" class="section-sm">
+  <div class="container">
+    <div class="pricing-inner">
+      <div class="label">Pricing</div>
+      <h2 style="color:var(--navy);margin-top:12px;">Subscription-based. Cloud costs stay yours.</h2>
+      <p>A per-tenant subscription covers the license, the JAR, updates, and support. Your cloud AI costs are billed directly to your cloud account — VaultIQ does not mark these up.</p>
+      <div class="pricing-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+          <div style="width:44px;height:44px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="white" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div style="font-size:17px;font-weight:600;color:var(--navy);">VaultIQ License</div>
+            <div style="font-size:13px;color:var(--text-muted);">Per-tenant, annual subscription</div>
+          </div>
+        </div>
+        <div class="pricing-list">
+          <div class="pricing-item"><div class="pricing-check"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p><strong>License key issuance</strong> — cryptographically signed JWT, pasted into one Vault Setting</p></div>
+          <div class="pricing-item"><div class="pricing-check"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p><strong>The JAR</strong> — versioned releases, backwards compatible, no rebuild required for config changes</p></div>
+          <div class="pricing-item"><div class="pricing-check"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p><strong>Updates and support</strong> — new cloud provider support, Vault SDK compatibility updates</p></div>
+          <div class="pricing-item"><div class="pricing-check"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p><strong>Cloud AI costs go to your cloud bill directly</strong> — AWS, Azure, or GCP. VaultIQ takes no cut.</p></div>
+        </div>
+        <div class="pricing-note">If your subscription lapses, the agent stops processing queries immediately. Your vector store data is not deleted — re-activate to resume.</div>
+      </div>
+      <div style="margin-top:28px;display:flex;justify-content:center;"><a href="mailto:info@virsaisolutions.com" class="btn btn-primary">Contact VirsAI to get pricing →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq" class="section">
+  <div class="container">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="label">FAQ</div>
+        <h2 style="color:var(--navy);margin-top:12px;">Common questions</h2>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Does VaultIQ store my documents?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">No. Only embedding vectors — mathematical representations of text, not readable text — are stored in your vector index, in your cloud account. The documents themselves never leave Vault. The vector index contains float arrays and document IDs, not the original text.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Can VaultIQ show a user a document they're not authorized to see?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">No. VaultIQ uses the calling user's Vault session token for all Vault API calls. If Vault denies that user access to a document, the document does not appear in search results or answers. The vector index may contain that document's embedding, but the RBAC check runs before the answer is composed.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>How do token quotas per user or role work?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">Vault administrators configure monthly token limits per individual user (by email) or per Vault role in Vault Settings — no code changes required. Limits reset at the start of each calendar month. When a user hits their limit they receive a clear message. Role-level limits apply to all users in that role; user-level limits take precedence over role limits if both are set. Admins can view current usage from Vault Settings at any time.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>What happens when the AI doesn't know the answer?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">VaultIQ says exactly: "I cannot answer this from the available documents." It does not guess, infer, or supplement with training data. If no documents match the query well enough, you get a clear message instead of a confident wrong answer.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>We're on Azure / GCP — does it work?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">Yes. Set <code>cloud_provider__c</code> to <code>azure</code> or <code>gcp</code> in Vault Settings and provide the corresponding endpoints and credentials. No JAR rebuild required. Azure uses Azure OpenAI + Azure AI Search. GCP uses Vertex AI (Gemini + text-embedding-004) + Vertex AI Vector Search.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>How long does setup take?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">Under a week, end to end. The technical configuration (JAR upload, Vault Settings, lifecycle wiring) takes about a day of effort. The remaining time is typically internal: waiting on cloud resource provisioning approvals, IT security review, and Vault change management. No professional services from VirsAI are required.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Does VaultIQ train on our documents?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">No. VaultIQ calls AI models at inference time — document snippets are passed as context for a single query and discarded. VaultIQ does not send your documents to any model training pipeline. No document content is retained by VaultIQ after the query is answered.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>What Vault edition and SDK version do we need?</span><svg class="faq-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="faq-a">Vault Professional or Enterprise with Vault SDK support enabled, version 24.1.0 or later. If you're unsure whether your Vault instance has SDK support, check with your Vault account team.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="container">
+    <h2>Ready to make your Vault answerable?</h2>
+    <p>Runs inside your infrastructure. Live in under a week. Your documents stay yours.</p>
+    <div class="cta-btns">
+      <a href="#" onclick="openRequestModal();return false;" class="btn btn-white">Request access →</a>
+      <a href="https://www.virsaisolutions.com/" class="btn btn-outline-white" target="_blank" rel="noopener">VirsAI Solutions ↗</a>
+    </div>
+    <div style="margin-top:40px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-size:28px;font-weight:600;color:var(--white);font-family:'IBM Plex Mono',monospace;">&lt; 1 week</div><div style="font-size:13px;color:#7da8c8;margin-top:4px;">Time to go live</div></div>
+      <div style="text-align:center;"><div style="font-size:28px;font-weight:600;color:var(--white);font-family:'IBM Plex Mono',monospace;">0</div><div style="font-size:13px;color:#7da8c8;margin-top:4px;">Servers to manage</div></div>
+      <div style="text-align:center;"><div style="font-size:28px;font-weight:600;color:var(--white);font-family:'IBM Plex Mono',monospace;">3</div><div style="font-size:13px;color:#7da8c8;margin-top:4px;">Cloud providers</div></div>
+      <div style="text-align:center;"><div style="font-size:28px;font-weight:600;color:var(--white);font-family:'IBM Plex Mono',monospace;">100%</div><div style="font-size:13px;color:#7da8c8;margin-top:4px;">Answers cite a source</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="logo-mark" style="width:28px;height:28px;">
+            <svg viewBox="0 0 18 18" fill="none" width="14" height="14"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#1D9E75"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.4)"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.4)"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.7)"/></svg>
+          </div>
+          <div style="font-size:15px;font-weight:600;color:var(--white);">Vault<span style="color:var(--teal)">IQ</span></div>
+        </div>
+        <div style="font-size:12px;color:#7da8c8;margin-top:6px;">A product of <a href="https://www.virsaisolutions.com/" style="color:#a8c4de;" target="_blank" rel="noopener">VirsAI Solutions</a></div>
+        <div style="font-size:12px;color:#4d7a9e;margin-top:6px;">© 2026 VirsAI Solutions. All rights reserved.</div>
+      </div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+        <a href="#how" style="font-size:13px;color:#7da8c8;">How it works</a>
+        <a href="#cloud" style="font-size:13px;color:#7da8c8;">Multi-cloud</a>
+        <a href="#security" style="font-size:13px;color:#7da8c8;">Security</a>
+        <a href="#features" style="font-size:13px;color:#7da8c8;">Features</a>
+        <a href="#onboarding" style="font-size:13px;color:#7da8c8;">Setup</a>
+        <a href="#faq" style="font-size:13px;color:#7da8c8;">FAQ</a>
+        <a href="https://www.virsaisolutions.com/" style="font-size:13px;color:#7da8c8;" target="_blank" rel="noopener">VirsAI ↗</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Document overlay panel ── -->
+<div class="doc-overlay" id="doc-overlay">
+  <div class="ov-hdr">
+    <div class="ov-title" id="ov-title"></div>
+    <button class="ov-close" id="ov-close">✕</button>
+  </div>
+  <div class="ov-body">
+    <div class="doc-meta">
+      <span class="dm-lbl">Doc ID</span><span class="dm-val" id="ov-id"></span>
+      <span class="dm-lbl">Status</span><span class="dm-val" id="ov-status"></span>
+      <span class="dm-lbl">Type</span><span class="dm-val" id="ov-type"></span>
+    </div>
+    <div class="doc-text" id="ov-text"></div>
+  </div>
+</div>
+
+<script>
+/* ── Mobile nav toggle ── */
+document.getElementById('nav-menu-btn').addEventListener('click', () => {
+  document.getElementById('mobile-nav').classList.toggle('open');
+});
+document.querySelectorAll('.mobile-nav a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobile-nav').classList.remove('open'));
+});
+
+/* ── Document overlay ── */
+const docOverlay = document.getElementById('doc-overlay');
+document.getElementById('ov-close').addEventListener('click', () => docOverlay.classList.remove('open'));
+document.addEventListener('click', e => {
+  if (docOverlay.classList.contains('open') &&
+      !docOverlay.contains(e.target) &&
+      !e.target.classList.contains('cit-ref') &&
+      !e.target.closest('.cit-item'))
+    docOverlay.classList.remove('open');
+});
+
+const DOCS = {
+  1: { id:'SP-2024-04-v2', status:'Approved', type:'Study Protocol',
+       title:'SP-2024-04 — Drug Substance Storage & Stability',
+       text:'Section 6.3 specifies that <span class="hl">the drug substance must be stored between 2°C and 8°C in light-protected, hermetically sealed containers</span>. Temperature excursions must be recorded in the deviation log within 2 hours of detection.' },
+  2: { id:'SOP-STAB-007', status:'Approved', type:'Standard Operating Procedure',
+       title:'SOP-STAB-007 — Temperature Excursion Handling',
+       text:'Section 4.1 states: <span class="hl">exposure above 15°C for more than 4 hours triggers a mandatory re-qualification study</span> before the batch may proceed to the next lifecycle state. All deviations require a Quality Lead sign-off.' },
+  3: { id:'AUDIT-CHK-R2', status:'Approved', type:'Quality Document',
+       title:'Audit Readiness Checklist — Revision 2',
+       text:'All audit evidence packets must include <span class="hl">signature logs from the previous 24 months with no gaps in the approval chain</span>. System-generated audit trails from Vault must be exported as PDF renditions.' },
+  4: { id:'PROTOCOL-PA-003', status:'Approved', type:'Clinical Study Document',
+       title:'Phase III Clinical Study Protocol — PA-003',
+       text:'Section 6.2 defines the primary endpoint: <span class="hl">reduction in HbA1c of ≥1.5% from baseline at Week 26 versus placebo</span>. Secondary endpoints include time-to-first-hypoglycaemic event and DTSQ patient-reported outcomes.' }
+};
+
+function openDoc(id) {
+  const d = DOCS[id]; if (!d) return;
+  document.getElementById('ov-title').textContent  = d.title;
+  document.getElementById('ov-id').textContent     = d.id;
+  document.getElementById('ov-status').textContent = d.status;
+  document.getElementById('ov-type').textContent   = d.type;
+  document.getElementById('ov-text').innerHTML     = d.text;
+  docOverlay.classList.add('open');
+}
+
+/* ── Chat simulation ── */
+const chatBody = document.getElementById('chat-body');
+
+const SCENARIOS = [
+  {
+    query: 'What are the approved storage conditions for Drug X in SP-2024-04?',
+    steps: [
+      { lbl:'Classifying intent',    det:'Document content query',          meta:'intent/content',    dur:750 },
+      { lbl:'Hybrid search',         det:'VQL FIND + semantic vector kNN',  meta:'9 docs retrieved',  dur:900 },
+      { lbl:'RBAC filtering',        det:'Checking Vault session token',    meta:'2 docs visible',    dur:650 },
+      { lbl:'Grounding & synthesis', det:'Claude Haiku 3.5 · 8 chunks',    meta:'~$0.0009',          dur:1100 }
+    ],
+    answer: [
+      'Drug X must be stored <strong>between 2°C and 8°C</strong> in light-protected containers ',
+      '<span class="cit-ref" data-id="1">1</span>',
+      '. Exposure above 15°C for more than 4 hours requires documented deviation and re-qualification ',
+      '<span class="cit-ref" data-id="2">2</span>','.'
+    ],
+    conf: '96%',
+    cits: [
+      { id:'1', num:'1', label:'SP-2024-04 §6.3', desc:'Drug Substance Storage & Stability' },
+      { id:'2', num:'2', label:'SOP-STAB-007 §4.1', desc:'Temperature Excursion Handling' }
+    ]
+  },
+  {
+    query: 'Show me all SOPs expiring in the next 60 days',
+    steps: [
+      { lbl:'Classifying intent',     det:'Expiry / metadata query',          meta:'intent/expiry',    dur:550 },
+      { lbl:'Querying Vault metadata', det:'Direct VQL — no LLM needed',       meta:'3 docs matched',  dur:650 },
+      { lbl:'RBAC filtering',          det:'Scoping to accessible documents',  meta:'all visible',     dur:400 },
+      { lbl:'Formatting results',      det:'Structured table from Vault data', meta:'~780ms saved',    dur:480 }
+    ],
+    answer: [
+      '3 SOPs expire within 60 days:<br>',
+      '• <strong>SOP-QC-021</strong> Stability Testing — <span style="color:var(--teal);font-weight:600">Aug 04</span><br>',
+      '• <strong>SOP-REG-008</strong> IND Submission — <span style="color:var(--amber);font-weight:600">Aug 17</span><br>',
+      '• <strong>SOP-MFG-044</strong> Batch Release — <span style="color:var(--text-muted)">Sep 01</span>'
+    ],
+    conf: '100%',
+    cits: []
+  },
+  {
+    query: 'What does the audit readiness checklist require?',
+    steps: [
+      { lbl:'Classifying intent',    det:'Document content query',         meta:'intent/content',   dur:700 },
+      { lbl:'Hybrid search',         det:'VQL FIND + semantic vector kNN', meta:'5 docs retrieved', dur:880 },
+      { lbl:'RBAC filtering',        det:'Checking Vault session token',   meta:'all visible',      dur:580 },
+      { lbl:'Grounding & synthesis', det:'Claude Haiku 3.5 · 3 chunks',   meta:'~$0.0005',         dur:980 }
+    ],
+    answer: [
+      'The audit checklist requires <strong>signature logs from the previous 24 months</strong> with no gaps in the approval chain ',
+      '<span class="cit-ref" data-id="3">3</span>',
+      '. Vault system-generated audit trails must be exported as PDF renditions and cross-referenced against the deviation log.'
+    ],
+    conf: '94%',
+    cits: [
+      { id:'3', num:'3', label:'AUDIT-CHK-R2', desc:'Audit Readiness Checklist — Revision 2' }
+    ]
+  }
+];
+
+let sIdx = 0, loopTimer = null;
+
+function mk(tag, cls, html='') {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html) e.innerHTML = html;
+  return e;
+}
+function append(node) {
+  chatBody.appendChild(node);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior:'smooth' });
+  return node;
+}
+function wait(ms) { return new Promise(r => { loopTimer = setTimeout(r, ms); }); }
+
+async function typeText(el, text, speed=34) {
+  el.classList.add('typing');
+  for (const ch of text) { el.textContent += ch; await wait(speed + (Math.random()*8-4)); }
+  el.classList.remove('typing');
+}
+
+async function streamSegs(bubble, segs, speed=95) {
+  bubble.classList.add('streaming');
+  for (const seg of segs) {
+    bubble.innerHTML += seg;
+    bindCits();
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior:'smooth' });
+    await wait(speed + (Math.random()*25-12));
+  }
+  bubble.classList.remove('streaming');
+}
+
+function bindCits() {
+  chatBody.querySelectorAll('.cit-ref').forEach(r => {
+    const f = r.cloneNode(true);
+    r.replaceWith(f);
+    f.addEventListener('click', e => { e.stopPropagation(); openDoc(f.dataset.id); });
+  });
+}
+
+function buildCard(steps) {
+  const card = mk('div','proc-card');
+  card.innerHTML = '<div class="proc-hdr">VaultIQ — Processing</div>';
+  steps.forEach((s,i) => {
+    const row = mk('div','proc-step'); row.id = 'ps'+i;
+    row.innerHTML = `<div class="step-ico"><div class="ico-spin"></div><svg class="ico-check" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-body"><div class="step-lbl">${s.lbl}</div><div class="step-det">${s.det}</div></div><span class="step-meta">${s.meta}</span>`;
+    card.appendChild(row);
+  });
+  const pw = mk('div','prog-wrap'); pw.id='pw';
+  const pb = mk('div','prog-bar'); pb.id='pb';
+  pw.appendChild(pb); card.appendChild(pw);
+  return card;
+}
+
+async function runStep(i, dur) {
+  const row = document.getElementById('ps'+i); if (!row) return;
+  row.classList.add('active');
+  if (i === 3) {
+    const pw = document.getElementById('pw'), pb = document.getElementById('pb');
+    if (pw && pb) {
+      pw.style.display='block'; let p=0;
+      const t = setInterval(() => { p=Math.min(p+100/(dur/70),96); pb.style.width=p+'%'; if(p>=96)clearInterval(t); }, 70);
+    }
+  }
+  await wait(dur);
+  row.classList.remove('active'); row.classList.add('done');
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior:'smooth' });
+}
+
+async function runScenario() {
+  clearTimeout(loopTimer);
+  chatBody.innerHTML = '';
+  const sc = SCENARIOS[sIdx]; sIdx = (sIdx+1) % SCENARIOS.length;
+
+  const ub = append(mk('div','bubble bubble-user'));
+  await typeText(ub, sc.query, 32);
+  await wait(500);
+
+  const card = append(buildCard(sc.steps));
+  for (let i=0;i<sc.steps.length;i++) {
+    await runStep(i, sc.steps[i].dur);
+    if (i < sc.steps.length-1) await wait(160);
+  }
+  const pb = document.getElementById('pb');
+  if (pb) pb.style.width='100%';
+  await wait(260);
+
+  card.style.transition='opacity .3s'; card.style.opacity='0';
+  await wait(320); card.remove();
+
+  const ab = append(mk('div','bubble bubble-ai'));
+  await streamSegs(ab, sc.answer, 90);
+  await wait(240);
+
+  const badge = mk('div','conf-badge');
+  badge.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Grounded · ${sc.conf} confidence`;
+  append(badge);
+  await wait(400);
+
+  if (sc.cits.length > 0) {
+    const panel = mk('div','cit-panel');
+    panel.appendChild(mk('div','cit-ttl','Source Documents'));
+    sc.cits.forEach(c => {
+      const item = mk('div','cit-item');
+      item.innerHTML = `<span class="cit-num">[${c.num}]</span><span>${c.label} — ${c.desc}</span>`;
+      item.addEventListener('click', () => openDoc(c.id));
+      panel.appendChild(item);
+    });
+    append(panel);
+  }
+
+  await wait(8500);
+  runScenario();
+}
+
+runScenario();
+
+/* ── Architecture flow animation ── */
+const ARCH_STEPS = [
+  { node: 'an-0', conn: null,  status: 'User submits query · session token attached' },
+  { node: null,   conn: 'ac-0', status: 'Routing to VaultIQ plugin via Vault SDK…' },
+  { node: 'an-1', conn: null,  status: 'Classifying intent · running VQL + vector search · RBAC filter' },
+  { node: null,   conn: 'ac-1', status: 'Sending embed request to your cloud AI endpoint…' },
+  { node: 'an-2', conn: null,  status: 'Embedding · kNN vector search · LLM synthesis in your account' },
+  { node: null,   conn: 'ac-2', status: 'Returning cited answer · no document text leaves your cloud' },
+  { node: 'an-3', conn: null,  status: 'Answer delivered · citations link to source docs in Vault ✓' },
+];
+const ARCH_DURS = [900, 600, 1100, 700, 1300, 650, 900];
+
+let archTimer = null;
+function archWait(ms) { return new Promise(r => { archTimer = setTimeout(r, ms); }); }
+
+function archReset() {
+  clearTimeout(archTimer);
+  ['an-0','an-1','an-2','an-3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('a-active','a-done');
+  });
+  ['ac-0','ac-1','ac-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('a-active','a-travel');
+  });
+  const st = document.getElementById('arch-status-text');
+  if (st) st.textContent = 'Waiting for query…';
+}
+
+async function runArch() {
+  archReset();
+  await archWait(600);
+  for (let i = 0; i < ARCH_STEPS.length; i++) {
+    const s = ARCH_STEPS[i];
+    const st = document.getElementById('arch-status-text');
+    if (st) { st.style.opacity=0; await archWait(120); st.textContent = s.status; st.style.opacity=1; }
+    if (s.node) {
+      const n = document.getElementById(s.node);
+      if (n) n.classList.add('a-active');
+      await archWait(ARCH_DURS[i]);
+      if (n && s.node !== 'an-3') n.classList.replace('a-active','a-done');
+    }
+    if (s.conn) {
+      const c = document.getElementById(s.conn);
+      if (c) c.classList.add('a-active');
+      await archWait(ARCH_DURS[i]);
+      if (c) c.classList.remove('a-active');
+    }
+  }
+  await archWait(3500);
+  runArch();
+}
+
+document.getElementById('arch-replay').addEventListener('click', runArch);
+
+/* start when section scrolls into view */
+const archSection = document.getElementById('security');
+const archObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) { archObs.disconnect(); runArch(); }
+}, { threshold: 0.3 });
+archSection.addEventListener ? archObs.observe(archSection) : runArch();
+
+/* ── FAQ accordion ── */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ── Nav active state ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + e.target.id ? 'var(--navy)' : '';
+      });
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => observer.observe(s));
+</script>
+
+<!-- ── Request access modal ── -->
+<style>
+  .req-modal-overlay { position: fixed; inset: 0; background: rgba(5,22,38,0.72); backdrop-filter: blur(4px); z-index: 9000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .req-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .req-modal { background: var(--white); border-radius: var(--radius-lg); padding: 36px; width: 100%; max-width: 440px; margin: 16px; box-shadow: 0 24px 64px rgba(5,22,38,0.35); transform: translateY(12px); transition: transform .2s; }
+  .req-modal-overlay.open .req-modal { transform: translateY(0); }
+  .req-modal h3 { font-size: 20px; color: var(--navy); margin-bottom: 6px; }
+  .req-modal p  { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+  .req-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .req-field label { font-size: 12px; font-weight: 600; color: var(--navy); }
+  .req-field input, .req-field select { border: 1.5px solid var(--border); border-radius: 7px; padding: 9px 12px; font-size: 14px; color: var(--navy); background: var(--white); width: 100%; outline: none; transition: border-color .15s; }
+  .req-field input:focus, .req-field select:focus { border-color: var(--teal); }
+  .req-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .req-cancel { font-size: 14px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 10px 4px; }
+  .req-success { text-align: center; padding: 16px 0; }
+  .req-success-icon { font-size: 40px; margin-bottom: 12px; }
+  .req-success h3 { font-size: 18px; color: var(--navy); margin-bottom: 8px; }
+  .req-success p { font-size: 14px; color: var(--text-muted); }
+</style>
+
+<div class="req-modal-overlay" id="req-modal-overlay">
+  <div class="req-modal" role="dialog" aria-modal="true" aria-labelledby="req-modal-title">
+    <div id="req-modal-form-wrap">
+      <h3 id="req-modal-title">Request access</h3>
+      <p>We'll follow up within one business day.</p>
+      <form id="req-modal-form">
+        <div class="req-field">
+          <label for="req-name">Full name</label>
+          <input id="req-name" name="name" type="text" required placeholder="Jane Smith">
+        </div>
+        <div class="req-field">
+          <label for="req-email">Work email</label>
+          <input id="req-email" name="email" type="email" required placeholder="jane@company.com">
+        </div>
+        <div class="req-field">
+          <label for="req-company">Company</label>
+          <input id="req-company" name="company" type="text" required placeholder="Acme Pharma">
+        </div>
+        <div class="req-field">
+          <label for="req-role">Your role</label>
+          <select id="req-role" name="role">
+            <option value="">Select a role…</option>
+            <option>IT / Cloud Infrastructure</option>
+            <option>Vault Administrator</option>
+            <option>Business / Operations</option>
+            <option>Information Security</option>
+            <option>Executive / Leadership</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="req-actions">
+          <button type="button" class="req-cancel" onclick="closeRequestModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="req-submit">Send request</button>
+        </div>
+      </form>
+    </div>
+    <div class="req-success" id="req-modal-success" style="display:none;">
+      <div class="req-success-icon">✓</div>
+      <h3>Request received</h3>
+      <p>We'll be in touch within one business day.<br>In the meantime, feel free to email us at<br><a href="mailto:info@virsaisolutions.com" style="color:var(--teal);">info@virsaisolutions.com</a>.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function openRequestModal() {
+  document.getElementById('req-modal-form-wrap').style.display = '';
+  document.getElementById('req-modal-success').style.display = 'none';
+  document.getElementById('req-modal-form').reset();
+  document.getElementById('req-submit').textContent = 'Send request';
+  document.getElementById('req-submit').disabled = false;
+  document.getElementById('req-modal-overlay').classList.add('open');
+  document.getElementById('req-name').focus();
+}
+function closeRequestModal() {
+  document.getElementById('req-modal-overlay').classList.remove('open');
+}
+document.getElementById('req-modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeRequestModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeRequestModal();
+});
+document.getElementById('req-modal-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('req-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  const data = Object.fromEntries(new FormData(this));
+  try {
+    const res = await fetch('https://formspree.io/f/xrewpwpj', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      document.getElementById('req-modal-form-wrap').style.display = 'none';
+      document.getElementById('req-modal-success').style.display = '';
+    } else {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
