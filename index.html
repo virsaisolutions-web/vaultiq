@@ -383,11 +383,15 @@
   .mobile-nav a { padding: 10px 0; font-size: 15px; font-weight: 500; color: var(--text-mid); border-bottom: 1px solid var(--surface-2); }
   .mobile-nav.open { display: flex; }
   @media (max-width: 900px) {
-    .hero-inner, .security-inner, .onboarding-inner { grid-template-columns: 1fr; }
-    .steps { grid-template-columns: 1fr 1fr; }
-    .steps .step:nth-child(2)::after { display: none; }
-    .nav-links, .nav-cta { display: none; }
-    .nav-menu-btn { display: flex; }
+    .arch-service { min-width: 80px; font-size: 12px; }
+    .arch-processing-card { min-width: auto; }
+    .arch-plugin-row .arch-node { min-width: auto; }
+    .security-inner { gap: 24px; }
+  }
+    @media (max-width: 768px) {
+    .arch-diagram { overflow-x: auto; }
+    .arch-service { flex: 1; min-width: 60px; font-size: 11px; padding: 8px 4px; }
+    .arch-processing-card { min-width: auto; width: 100%; }
   }
   @media (max-width: 600px) {
     .steps { grid-template-columns: 1fr; }
